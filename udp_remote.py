@@ -46,6 +46,6 @@ elif len(sys.argv) == 3 and sys.argv[1] == 'client':
             break # we are done, and can stop looping
     print('The server says: {}'.format(data.decode('utf-8')))
 else:
-    print('usage: udp_remote.py server [ <interface> ]')
-    print('   or: udp_remote.py client <host>', file=sys.stderr)
+    sys.stderr.write('''usage: udp_remote.py server [ <interface> ]\n'''
+            '''   or: udp_remote.py client <host>\n''')
     sys.exit(2)
