@@ -11,7 +11,8 @@ Use in interpreter as
     import urllib
     from verbose_handler import VerboseHTTPHandler as VH
     opener = urllib.request.build_opener(VH)
-    url = '' # some URL, using HTTP, not HTTPS
+    url = '' # some URL, using HTTP; not HTTPS, which requires
+                        http.client.HTTPSConnection()
     opener.open(url)
 """
 
