@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Rhodes and Goerzen, Foundations of Python Network Programming, tcp_sixteen.py
 # Simple TCP client and server that send and receive 16 octets
-# Converted to Python3 by David Branner, 20140703
+# Converted to Python3 by David Branner, 20140703, works.
 
 import socket, sys
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

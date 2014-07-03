@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # Rhodes and Goerzen, Foundations of Python Network Programming, udp_remote.py
 # UDP client and server for talking over the network
-# Converted to Python3 by David Branner, 20140629
+# Converted to Python3 by David Branner, 20140629, works.
 
 import random, socket, sys
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

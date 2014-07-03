@@ -2,7 +2,7 @@
 # Rhodes and Goerzen, Foundations of Python Network Programming - Chapter 9
 # verbose_handler.py
 # HTTP request handler for urllib that prints requests and responses.
-# Converted to Python3 by David Branner, 20140703
+# Converted to Python3 by David Branner, 20140703, works.
 
 """Report HTTP request and response.
 
