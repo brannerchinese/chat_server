@@ -6,15 +6,34 @@
 
 """Report HTTP request and response.
 
-Use in interpreter as
+    Use in interpreter as
 
-    import urllib
-    from verbose_handler import VerboseHTTPHandler as VH
-    opener = urllib.request.build_opener(VH)
-    url = '' # some URL, using HTTP; not HTTPS, which requires
-                        http.client.HTTPSConnection()
-    opener.open(url)
-"""
+    >>> import urllib.request
+    >>> from verbose_handler import VerboseHTTPHandler as VH
+    >>> opener = urllib.request.build_opener(VH)
+    >>> url = 'http://www.example.com' # use HTTP, not HTTPS
+    >>> x = opener.open(url) # doctest: +ELLIPSIS
+    --------------------------------------------------
+    GET / HTTP/1.1
+    Accept-Encoding: identity
+    Connection: close
+    Host: www.example.com
+    User-Agent: Python-urllib/3...
+    -------------------- Response --------------------
+    HTTP/1.1 200 OK
+    Accept-Ranges: bytes
+    Cache-Control: max-age=604800
+    Content-Type: text/html
+    Date: ...
+    Etag: "..."
+    Expires: ...
+    Last-Modified: ...
+    Server: ...
+    X-Cache: HIT
+    x-ec-custom-error: 1
+    Content-Length: ...
+    Connection: close
+    """
 
 import io, http.client, urllib
 
