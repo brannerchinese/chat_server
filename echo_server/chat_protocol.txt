@@ -1,0 +1,7 @@
+login <user>
+logout
+send <user> <msg>
+
+# Server functionality:
+# 1. reject more than one simultaneous login by a given user.
+# 2. pass messages between logged in users.
