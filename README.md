@@ -4,6 +4,8 @@ Build a chat server and client to work with it.
 
 Original [Iron Forger](https://hackpad.com/Iron-Forger-kEmauANGcV5) assignment is at https://hackpad.com/Week-6-Chat-Server-Client-rIxE6ZfW1sN.
 
+**Status**: Not yet working satisfactorily.
+
 ### Currently working
 
 `server.py`, `client.py`
