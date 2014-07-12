@@ -50,7 +50,7 @@ def handle_client(streamreader, streamwriter):
         if data is None:
             continue
         login = data.decode().rstrip()
-        print('Log-in by {}'.format(login))
+        print('Log-in by user "{}"'.format(login))
         # Store log-in: client in dictionary.
         clients_by_login[login] = (streamreader, streamwriter)
     # now be an echo back server until client sends a bye
@@ -67,7 +67,7 @@ def handle_client(streamreader, streamwriter):
         if sdata.lower() == 'q':
             streamwriter.write("q\n".encode())
             break
-        response = ("you sent: {}\n".format(sdata))
+        response = ("Confirming your message: {}\n".format(sdata))
         try:
             streamwriter.write(response.encode())
         except OSError:

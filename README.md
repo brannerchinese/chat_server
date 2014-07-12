@@ -11,6 +11,12 @@ Original [Iron Forger](https://hackpad.com/Iron-Forger-kEmauANGcV5) assignment i
  * Using Python 3.4's `asyncio` module and `asyncio.streams.StreamReader` and `asyncio.streams.StreamWriter` objects. 
  * Multiple clients can log into the same server.
  * Each client logs in with its own log-in, and a dictionary is populated, `login: (StreamReader, StreamWrite)`.
+ * The server and each client choose the port over which they communicate at random. The same seed must be supplied:
+
+        python server.py oh_a_seed_here
+        python client.py oh_a_seed_here
+
+   etc. If no seed is supplied, the programs use a default seed. If the seeds used are not the same, then the client will not be able to contact the server.
 
 ### Currently not working
 
@@ -18,11 +24,11 @@ Original [Iron Forger](https://hackpad.com/Iron-Forger-kEmauANGcV5) assignment i
 
 ### Next
 
+ * Implement message functionality.
  * Handle commands from the client to the server:
    * `?h`: list of commands
    * `?u`: list of logged-in users
    * `q`: quit
    * `>u[, u2, ...]: message`: send `message` to user(s) `u`, `u2`, etc. 
- * Implement message functionality.
 
 [end]
