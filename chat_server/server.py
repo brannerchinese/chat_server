@@ -42,10 +42,10 @@ def handle_client(client_reader, client_writer):
         if data is None:
             continue
         login = data.decode().rstrip()
-        print('Received {}'.format(login))
-        # Store log-in: client in dictionary QQQ
+        print('Log-in by {}'.format(login))
+        # Store log-in: client in dictionary.
         clients_by_login[login] = (client_reader, client_writer)
-        print('all clients_by_login:', clients_by_login)
+#        print('all clients_by_login:', clients_by_login)
     # now be an echo back server until client sends a bye
     i = 0  # sequence number
     # let client know we are ready
@@ -59,10 +59,9 @@ def handle_client(client_reader, client_writer):
             print("Received no data")
             # exit echo loop and disconnect
             return
-
         sdata = data.decode().rstrip()
-        if sdata.lower() == 'bye':
-            client_writer.write("BYE\n".encode())
+        if sdata.lower() == 'q':
+            client_writer.write("q\n".encode())
             break
         response = ("ECHO {}: {}\n".format(i, sdata))
         try:

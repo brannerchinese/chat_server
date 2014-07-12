@@ -61,7 +61,7 @@ def handle_client(host, port):
             message = input(': ')
             if not message:
                 continue
-            if message.lower() == 'bye':
+            if message.lower() == 'q':
                 break
             # send each string and get a reply, it should be an echo back
             client_writer.write(('{}\n'.format(message)).encode())
@@ -69,30 +69,33 @@ def handle_client(host, port):
                     client_reader.readline(), timeout=None)
             sdata = data.decode().rstrip()
             print(sdata)
-
-        # send BYE to disconnect gracefully
-        client_writer.write('bye\n'.encode())
-        # receive BYE confirmation
+        #
+        # Quit.
+        client_writer.write('q\n'.encode())
+        # Confirm quit.
         data = yield from asyncio.wait_for(
                 client_reader.readline(), timeout=None)
-
-        sdata = data.decode().rstrip().upper()
-        print("Received '%s'" % sdata)
+        sdata = data.decode().rstrip()
+        if sdata == 'q':
+            pass
+#        print("Received '{}'".format(sdata))
     except ConnectionResetError:
         print('Connection reset; exiting.')
     finally:
         print("Disconnecting from {} {}".format(host, port))
         client_writer.close()
         print("Disconnected from {} {}".format(host, port))
+    raise SystemExit
 
 
 def main():
     loop = asyncio.get_event_loop()
     make_connection('localhost', 2991)
-    try:
-        loop.run_forever()
-    except Exception as e:
-        print(e)
+    loop.run_forever()
+    except Exception:
+        print('here')
+        loop.close()
+    sys.exit()
 
 if __name__ == '__main__':
     main()
