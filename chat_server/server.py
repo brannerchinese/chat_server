@@ -75,6 +75,7 @@ def handle_client(streamreader, streamwriter):
             break
 
 def main():
+    print('''To quit, use control-c.''')
     # Choose port.
     if len(sys.argv) < 2:
         sys.argv.append(137)

@@ -36,6 +36,11 @@ def handle_client(host, port):
         else:
             print("Connected to {} {}".format(host, port))
         #
+        # Instructions.
+        print('''A colon (:) at the beginning of a line is a prompt; enter '''
+                '''your message after it and submit with carriage-return.''')
+        print('Disconnect using "q" alone on a line.")
+        #
         # Log in.
         login = input('login: ')
         streamwriter.write((login + '\n').encode())
@@ -53,16 +58,15 @@ def handle_client(host, port):
             message = input(': ')
             if not message:
                 continue
-            elif message.lower() == 'q':
+            if message.lower() == 'q':
                 streamwriter.write('q\n'.encode())
                 # Confirm quit.
                 data = yield from asyncio.wait_for(
                         streamreader.readline(), timeout=None)
                 if data.decode().rstrip() == 'q':
                     break
-            else:
-                # Let the server decide what kind of message it is.
-                streamwriter.write(('{}\n'.format(message)).encode())
+            # send each string and get a reply, it should be an echo back
+            streamwriter.write(('{}\n'.format(message)).encode())
             data = yield from asyncio.wait_for(
                     streamreader.readline(), timeout=None)
             sdata = data.decode().rstrip()
