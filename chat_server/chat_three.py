@@ -7,9 +7,29 @@ import socket
 import sys
 import random
 import time
+import signal
 
 HOST = sys.argv.pop() if len(sys.argv) == 3 else '127.0.0.1'
 PORT = 1060
+
+class Timeout():
+    """Timeout class using SIGALRM signal."""
+    # From http://stackoverflow.com/a/8465202/621762
+    class Timeout(Exception):
+        pass
+ 
+    def __init__(self, seconds):
+        self.seconds = seconds
+ 
+    def __enter__(self):
+        signal.signal(signal.SIGALRM, self.raise_timeout)
+        signal.alarm(self.seconds)
+ 
+    def __exit__(self, *args):
+        signal.alarm(0)
+ 
+    def raise_timeout(self, *args):
+        raise Timeout.Timeout()
 
 def main():
     choices = {'server': run_server,
@@ -58,17 +78,21 @@ def run_server(s):
             print('Socket connects {} and {}.'.
                     format(sc.getsockname(), sc.getpeername()))
             while True:
-                message = recv_full_msg(sc)
-                if message in ['bye', '', None]:
-                    # Remember to remove this client from clients
-                    to_remove.add((sc, sockname))
-                    sc.sendall(b'Farewell, client\n')
-                    sc.close()
-                    print('Reply sent to {}, socket closed'.
-                            format(sockname))
-                    break
-                print('The incoming message says {}'.format(message))
-                sc.sendall(bytes(message + '\n', 'utf-8'))
+                try:
+                    with Timeout(1):
+                        message = recv_full_msg(sc)
+                        if message in ['bye', '', None]:
+                            # Remember to remove this client from clients
+                            to_remove.add((sc, sockname))
+                            sc.sendall(b'Farewell, client\n')
+                            sc.close()
+                            print('Reply sent to {}, socket closed'.
+                                    format(sockname))
+                            break
+                        print('The incoming message says {}'.format(message))
+                        sc.sendall(bytes(message + '\n', 'utf-8'))
+                except Timeout.Timeout:
+                    pass
         clients = clients - to_remove
         print('after removal:', clients)
     s.close()
