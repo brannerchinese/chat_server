@@ -6,6 +6,7 @@
 
 import asyncio
 import sys
+import os
 
 clients = {}  # task -> (reader, writer)
 
@@ -28,17 +29,17 @@ def make_connection(host, port):
 def handle_client(host, port):
     print("Connecting to {} {}".format(host, port))
     try:
-        client_reader, client_writer = (
+        streamreader, streamwriter = (
                 yield from asyncio.open_connection(host, port))
     except OSError: # first: ConnectionRefusedError
         sys.exit('Exception')
     try:
         # Prepare for client log-in.
         data = yield from asyncio.wait_for(
-                client_reader.readline(), timeout=None)
+                streamreader.readline(), timeout=None)
         sdata = data.decode().rstrip()
         if sdata != 'Connection made.':
-            client_writer.write('Expected "Connection made." Received "{}"'.
+            streamwriter.write('Expected "Connection made." Received "{}"'.
                     format(sdata))
             return
         else:
@@ -46,11 +47,11 @@ def handle_client(host, port):
         #
         # Log in.
         login = input('login: ')
-        client_writer.write((login + '\n').encode())
+        streamwriter.write((login + '\n').encode())
         #
         # Prepare for messages
         data = yield from asyncio.wait_for(
-                client_reader.readline(), timeout=None)
+                streamreader.readline(), timeout=None)
         sdata = data.decode().rstrip()
         if sdata != 'ready for messages':
             print('Expected "ready for messages", received "{}"'.format(sdata))
@@ -62,40 +63,37 @@ def handle_client(host, port):
             if not message:
                 continue
             if message.lower() == 'q':
-                break
+                if whether_to_quit(streamreader, streamwriter) == 'q':
+                    break
             # send each string and get a reply, it should be an echo back
-            client_writer.write(('{}\n'.format(message)).encode())
+            streamwriter.write(('{}\n'.format(message)).encode())
             data = yield from asyncio.wait_for(
-                    client_reader.readline(), timeout=None)
+                    streamreader.readline(), timeout=None)
             sdata = data.decode().rstrip()
             print(sdata)
-        #
-        # Quit.
-        client_writer.write('q\n'.encode())
-        # Confirm quit.
-        data = yield from asyncio.wait_for(
-                client_reader.readline(), timeout=None)
-        sdata = data.decode().rstrip()
-        if sdata == 'q':
-            pass
-#        print("Received '{}'".format(sdata))
+    except KeyboardInterrupt:
+        streamwriter.write('q\n'.encode())
     except ConnectionResetError:
-        print('Connection reset; exiting.')
+        print('Connection reset; server not found.')
     finally:
-        print("Disconnecting from {} {}".format(host, port))
-        client_writer.close()
+        print("\nDisconnecting from {} {}".format(host, port))
+        streamwriter.close()
         print("Disconnected from {} {}".format(host, port))
-    raise SystemExit
+        os._exit(1)
+
+def whether_to_quit(streamreader, streamwriter):
+    # Quit.
+    streamwriter.write('q\n'.encode())
+    # Confirm quit.
+    data = yield from asyncio.wait_for(
+            streamreader.readline(), timeout=None)
+    return data.decode().rstrip()
 
 
 def main():
     loop = asyncio.get_event_loop()
     make_connection('localhost', 2991)
     loop.run_forever()
-    except Exception:
-        print('here')
-        loop.close()
-    sys.exit()
 
 if __name__ == '__main__':
     main()

@@ -9,14 +9,14 @@ import asyncio
 clients = {}           # task:  (reader, writer)
 clients_by_login = {}  # login: (reader, writer)
 
-def accept_client(client_reader, client_writer):
+def accept_client(streamreader, streamwriter):
     """Accept client and delete when finished."""
-    task = asyncio.Task(handle_client(client_reader, client_writer))
-    clients[task] = (client_reader, client_writer)
+    task = asyncio.Task(handle_client(streamreader, streamwriter))
+    clients[task] = (streamreader, streamwriter)
     def client_done(task):
         """Delete client."""
         del clients[task]
-        client_writer.close()
+        streamwriter.close()
         print('End connection; {}'.format(count_connections()))
     print('New connection made; {}'.format(count_connections()))
     task.add_done_callback(client_done)
@@ -31,39 +31,37 @@ def count_connections():
     return 'there {}.'.format(quote)
 
 @asyncio.coroutine
-def handle_client(client_reader, client_writer):
+def handle_client(streamreader, streamwriter):
     # Begin client log-in: 
     #   establish connection and add login to clients_by_login.
     login = ''
     while not login:
-        client_writer.write("Connection made.\n".encode())
+        streamwriter.write("Connection made.\n".encode())
         data = yield from asyncio.wait_for(
-                client_reader.readline(), timeout=None)
+                streamreader.readline(), timeout=None)
         if data is None:
             continue
         login = data.decode().rstrip()
         print('Log-in by {}'.format(login))
         # Store log-in: client in dictionary.
-        clients_by_login[login] = (client_reader, client_writer)
-#        print('all clients_by_login:', clients_by_login)
+        clients_by_login[login] = (streamreader, streamwriter)
     # now be an echo back server until client sends a bye
     # let client know we are ready
-    client_writer.write("ready for messages\n".encode())
+    streamwriter.write("ready for messages\n".encode())
     while True:
         # wait for input from client
         data = yield from asyncio.wait_for(
-                client_reader.readline(), timeout=None)
+                streamreader.readline(), timeout=None)
         if data is None:
             print("Received no data")
-            # exit echo loop and disconnect
             return
         sdata = data.decode().rstrip()
         if sdata.lower() == 'q':
-            client_writer.write("q\n".encode())
+            streamwriter.write("q\n".encode())
             break
         response = ("you sent: {}\n".format(sdata))
         try:
-            client_writer.write(response.encode())
+            streamwriter.write(response.encode())
         except OSError:
             print('Exception')
             break
@@ -72,7 +70,11 @@ def main():
     loop = asyncio.get_event_loop()
     f = asyncio.start_server(accept_client, host=None, port=2991)
     loop.run_until_complete(f)
-    loop.run_forever()
+    try:
+        loop.run_forever()
+    finally:
+        loop.stop()
+        print('here')
 
 if __name__ == '__main__':
     main()
