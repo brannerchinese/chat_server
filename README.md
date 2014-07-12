@@ -20,7 +20,10 @@ Original [Iron Forger](https://hackpad.com/Iron-Forger-kEmauANGcV5) assignment i
 
 ### Currently not working
 
- * Although each client can communicate independently with the single server, they cannot communicate with each other. An effort is made in `server2.py`, `client2.py` to allow different clients to communicate by way of the server, but it is not working now.
+ * Although each client can communicate independently with the single server, they cannot communicate with each other. An effort is made in `server2.py`, `client2.py` to allow different clients to communicate by way of the server, but it is not working now. There seem to be two problems: 
+
+   * checking constantly for input and printing output whenever it arrives need to be separate somehow, so that they can appear to take place simultaneously;
+   * in `server2.py` and `client2.py`, for some reason messages did not go to the clients I expected them to go to — they went to the client that originally sent the messages.
 
 ### Next
 
