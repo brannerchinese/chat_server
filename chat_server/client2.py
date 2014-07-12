@@ -1,7 +1,7 @@
 #! /usr/bin/env python
-# client.py
+# client2.py
 # Based on https://gist.github.com/dbehnke/9627160
-# 20140711
+# 20140712, does not work
 
 """Create and run client for AsyncIO server."""
 
@@ -63,8 +63,10 @@ def handle_client(host, port):
             else:
                 # Let the server decide what kind of message it is.
                 streamwriter.write(('{}\n'.format(message)).encode())
-            data = yield from asyncio.wait_for(
-                    streamreader.readline(), timeout=None)
+            try:
+                data = yield from asyncio.wait_for(
+                        streamreader.readline(), timeout=.1)
+            except 
             sdata = data.decode().rstrip()
             print(sdata)
     except KeyboardInterrupt: # Treat like regular quit.
