@@ -16,7 +16,7 @@ Next:
    * `?h`: list of commands
    * `?u`: list of logged-in users
    * `q`: quit
-   * `>u[, u2, ...]: message`: send message to user(s) u, u2, etc. 
+   * `>u[, u2, ...]: message`: send `message` to user(s) `u`, `u2`, etc. 
  * Implement message functionality.
  * Make sure a logged-out client actually quits.
 
