@@ -1,4 +1,4 @@
-# behnke_server.py
+# server.py
 # Based on https://gist.github.com/dbehnke/9627160
 # 20140711
 

@@ -1,4 +1,4 @@
-# behnke_client.py
+# client.py
 # Based on https://gist.github.com/dbehnke/9627160
 # 20140711
 
