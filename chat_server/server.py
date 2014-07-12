@@ -1,13 +1,17 @@
+#! /usr/bin/env python
 # server.py
 # Based on https://gist.github.com/dbehnke/9627160
 # 20140711
 
-"""Launch AsyncIO Server"""
+"""Launch and run AsyncIO Server."""
 
 import asyncio
+import random
+import sys
+import os
 
-clients = {}           # task:  (reader, writer)
-clients_by_login = {}  # login: (reader, writer)
+clients = {}           # task:  (reader, writer); for control of tasks
+clients_by_login = {}  # login: (reader, writer); for sending messages
 
 def accept_client(streamreader, streamwriter):
     """Accept client and delete when finished."""
@@ -34,11 +38,15 @@ def count_connections():
 def handle_client(streamreader, streamwriter):
     # Begin client log-in: 
     #   establish connection and add login to clients_by_login.
+    streamwriter.write("Connection made.\n".encode())
     login = ''
     while not login:
-        streamwriter.write("Connection made.\n".encode())
-        data = yield from asyncio.wait_for(
-                streamreader.readline(), timeout=None)
+        try:
+            data = yield from asyncio.wait_for(
+                    streamreader.readline(), timeout=None)
+        except OSError:
+            print('Exception')
+            break
         if data is None:
             continue
         login = data.decode().rstrip()
@@ -67,14 +75,21 @@ def handle_client(streamreader, streamwriter):
             break
 
 def main():
+    # Choose port.
+    if len(sys.argv) < 2:
+        sys.argv.append(137)
+    random.seed(sys.argv[1])
+    PORT = random.randint(49152, 65535)
+    # Start loop.
     loop = asyncio.get_event_loop()
-    f = asyncio.start_server(accept_client, host=None, port=2991)
+    f = asyncio.start_server(accept_client, host=None, port=PORT)
     loop.run_until_complete(f)
     try:
         loop.run_forever()
+    except KeyboardInterrupt:
+        pass
     finally:
         loop.stop()
-        print('here')
 
 if __name__ == '__main__':
     main()
