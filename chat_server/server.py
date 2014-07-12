@@ -47,11 +47,9 @@ def handle_client(client_reader, client_writer):
         clients_by_login[login] = (client_reader, client_writer)
 #        print('all clients_by_login:', clients_by_login)
     # now be an echo back server until client sends a bye
-    i = 0  # sequence number
     # let client know we are ready
     client_writer.write("ready for messages\n".encode())
     while True:
-        i = i + 1
         # wait for input from client
         data = yield from asyncio.wait_for(
                 client_reader.readline(), timeout=None)
@@ -63,7 +61,7 @@ def handle_client(client_reader, client_writer):
         if sdata.lower() == 'q':
             client_writer.write("q\n".encode())
             break
-        response = ("ECHO {}: {}\n".format(i, sdata))
+        response = ("you sent: {}\n".format(sdata))
         try:
             client_writer.write(response.encode())
         except OSError:
