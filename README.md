@@ -6,7 +6,7 @@ Original [Iron Forger](https://hackpad.com/Iron-Forger-kEmauANGcV5) assignment i
 
 Currently working:
 
- * Using Python 3.4's `asyncio` module and `asyncio.streams.StreamReader` and asyncio.streams.StreamWriter` objects. 
+ * Using Python 3.4's `asyncio` module and `asyncio.streams.StreamReader` and `asyncio.streams.StreamWriter` objects. 
  * Multiple clients can log into the same server.
  * Each client logs in with its own log-in, and a dictionary is populated, `login: (StreamReader, StreamWrite)`.
 
