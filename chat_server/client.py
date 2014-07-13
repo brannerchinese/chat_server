@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # client.py
-# Based on https://gist.github.com/dbehnke/9627160
+# David Prager Branner
 # 20140711
 
 """Create and run client for AsyncIO server."""
@@ -28,10 +28,10 @@ def handle_client(host, port):
         # Prepare for client log-in.
         data = yield from asyncio.wait_for(
                 streamreader.readline(), timeout=None)
-        sdata = data.decode().rstrip()
-        if sdata != 'Connection made.':
+        data = data.decode().rstrip()
+        if data != 'Connection made.':
             streamwriter.write('Expected "Connection made." Received "{}"'.
-                    format(sdata))
+                    format(data))
             return
         else:
             print("Connected to {} {}".format(host, port))
@@ -48,9 +48,9 @@ def handle_client(host, port):
         # Prepare for messages
         data = yield from asyncio.wait_for(
                 streamreader.readline(), timeout=None)
-        sdata = data.decode().rstrip()
-        if sdata != 'ready for messages':
-            print('Expected "ready for messages", received "{}"'.format(sdata))
+        data = data.decode().rstrip()
+        if data != 'ready for messages':
+            print('Expected "ready for messages", received "{}"'.format(data))
             return
         #
         # Message loop.
@@ -69,8 +69,8 @@ def handle_client(host, port):
             streamwriter.write(('{}\n'.format(message)).encode())
             data = yield from asyncio.wait_for(
                     streamreader.readline(), timeout=None)
-            sdata = data.decode().rstrip()
-            print(sdata)
+            data = data.decode().rstrip()
+            print(data)
     except KeyboardInterrupt: # Treat like regular quit.
         streamwriter.write('q\n'.encode())
     except ConnectionResetError: # If server is down.

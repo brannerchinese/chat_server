@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # server.py
-# Based on https://gist.github.com/dbehnke/9627160
+# David Prager Branner
 # 20140711
 
 """Launch and run AsyncIO Server."""
@@ -63,11 +63,11 @@ def handle_client(streamreader, streamwriter):
         if data is None:
             print("Received no data")
             return
-        sdata = data.decode().rstrip()
-        if sdata.lower() == 'q':
+        data = data.decode().rstrip()
+        if data.lower() == 'q':
             streamwriter.write("q\n".encode())
             break
-        response = ("Confirming your message: {}\n".format(sdata))
+        response = ("Confirming your message: {}\n".format(data))
         try:
             streamwriter.write(response.encode())
         except OSError:
