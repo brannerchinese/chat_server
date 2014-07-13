@@ -39,7 +39,7 @@ def handle_client(host, port):
         # Instructions.
         print('''A colon (:) at the beginning of a line is a prompt; enter '''
                 '''your message after it and submit with carriage-return.''')
-        print('Disconnect using "q" alone on a line.")
+        print('Disconnect using "q" alone on a line.')
         #
         # Log in.
         login = input('login: ')
