@@ -6,19 +6,22 @@ Original [Iron Forger](https://hackpad.com/Iron-Forger-kEmauANGcV5) assignment i
 
 **Status**: Not yet working satisfactorily.
 
-### Currently working
+### To run
 
-`server.py`, `client.py`
+Programs: `server.py`, `client.py`.
 
- * Using Python 3.4's `asyncio` module and `asyncio.streams.StreamReader` and `asyncio.streams.StreamWriter` objects. 
- * Multiple clients can log into the same server.
- * Each client logs in with its own log-in, and a dictionary is populated, `login: (StreamReader, StreamWrite)`.
  * The server and each client choose the port over which they communicate at random. The same seed must be supplied:
 
         python server.py oh_a_seed_here
         python client.py oh_a_seed_here
 
    etc. If no seed is supplied, the programs use a default seed. If the seeds used are not the same, then the client will not be able to contact the server.
+
+### Functionality currently working
+
+ * Using Python 3.4's `asyncio` module and `asyncio.streams.StreamReader` and `asyncio.streams.StreamWriter` objects. 
+ * Multiple clients can log into the same server.
+ * Each client logs in with its own log-in, and a dictionary is populated, `login: (StreamReader, StreamWrite)`.
 
 ### Currently not working
 
