@@ -8,7 +8,7 @@ Original [Iron Forger](https://hackpad.com/Iron-Forger-kEmauANGcV5) assignment i
 
 ### To run
 
-Programs: `server.py`, `client.py`.
+Programs: `server.py`, `client.py`. These programs require at least Python 3.4.
 
  * The server and each client choose the port over which they communicate at random. The same seed must be supplied:
 
